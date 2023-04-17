@@ -1,0 +1,63 @@
+[SRSReportParameterAttribute(classStr(DocAgreementDocumentContract))]
+class DocAgreementDocumentDP extends SRSReportDataProviderBase
+{
+    // Contains Agreement header data.
+    DocAgreementHeader  docAgreementHeader;
+    
+    // Contains Agreement lines data.
+    DocAgreementLine    docAgreementLine;
+
+    // Contains Agreement customer contact data.
+    DocAgreementContact docAgreementContact;
+
+    
+    [SRSReportDataSetAttribute(tablestr(DocAgreementHeader))]
+    public DocAgreementHeader getDocAgreementHeader()
+    {
+        select docAgreementHeader;
+        return docAgreementHeader;
+    }
+    
+    [SRSReportDataSetAttribute(tablestr(DocAgreementLine))]
+    public DocAgreementLine getDocAgreementLine()
+    {
+        select docAgreementLine;
+        return docAgreementLine;
+    }
+
+    [SRSReportDataSetAttribute(tablestr(DocAgreementContact))]
+    public DocAgreementContact getDocAgreementContact()
+    {
+        select docAgreementContact;
+        return docAgreementContact;
+    }
+
+    /// <summary>
+    /// Process report data.
+    /// </summary>
+    public void processReport()
+    {
+        DocAgreementDocumentContract contract;
+        SalesAgreementHeader salesAgreementHeader;
+
+        contract = this.parmDataContract() as DocAgreementDocumentContract;
+
+        // Get sales agreement header record from the contract parameter
+        salesAgreementHeader = 
+            SalesAgreementHeader::find(contract.parmSalesAgreementRecId());
+        
+        if (salesAgreementHeader)
+        {
+            // Populate sales agreement header
+            this.populateSalesAgreementHeader(salesAgreementHeader);
+
+            // Populate sales agreement line
+            this.populateSalesAgreementLine(salesAgreementHeader);
+
+            // Populate sales agreement customer contacts
+            this.populateSalesAgreementCustomerContact(salesAgreementHeader);
+        }
+    }
+
+    ...
+}

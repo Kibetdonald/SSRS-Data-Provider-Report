@@ -1,0 +1,16 @@
+[DataContractAttribute]
+public class DocAgreementDocumentContract
+{
+    RecId  salesAgreementRecId;
+    
+    [
+        DataMemberAttribute('SalesAgreementRecId'),
+        SysOperationLabelAttribute(literalStr("@SYS190134")),
+        SysOperationControlVisibilityAttribute(false)
+    ]
+    public RecId parmSalesAgreementRecId(RecId _salesAgreementRecId = salesAgreementRecId)
+    {
+        salesAgreementRecId = _salesAgreementRecId;
+        return salesAgreementRecId;
+    }
+}

@@ -1,0 +1,41 @@
+class DocAgreementDocumentController extends SrsReportRunController
+{
+    public static DocAgreementDocumentController construct()
+    {
+        return new DocAgreementDocumentController();
+    }
+
+    public static void main(Args _args)
+    {
+        DocAgreementDocumentController docAgreementDocumentController = 
+            DocAgreementDocumentController::construct();                                         
+        docAgreementDocumentController.parmReportName(ssrsReportStr(DocAgreementDocument, Report));
+        docAgreementDocumentController.parmArgs(_args);
+        docAgreementDocumentController.parmDialogCaption("Sales agreement document");
+        docAgreementDocumentController.startOperation();
+    }
+
+    protected void prePromptModifyContract()
+    {
+        DocAgreementDocumentContract contract = this.parmReportContract().parmRdpContract();
+
+        // Set the hidden parameter value.
+        contract.parmSalesAgreementRecId(args.record().RecId);
+
+        // Set the report design name.
+        this.parmReportContract().parmReportName(ssrsReportStr(DocAgreementDocument, Report));
+
+        boolean isPreview = args.menuItemName() == menuItemOutputStr(DocAgreementDocumentPreview);
+
+        // Set the target print destination to Screen if we are previewing the report.
+        if (isPreview)
+        {
+           this.parmReportContract().parmPrintSettings().printMediumType(SRSPrintMediumType::Screen);
+        }
+
+        // Don't show the report dialog if the report menu item is DocAgreementDocumentPreview
+        // and don't save to SysLastValue either.
+        this.parmShowDialog(!isPreview);
+        this.parmLoadFromSysLastValue(!isPreview);
+    }
+}
